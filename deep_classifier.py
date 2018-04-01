@@ -2,14 +2,14 @@ import tensorflow as tf
 
 
 class DeepLSTMClassifier(object):
-    def stacked_LSTM(self, x, dropout, seq_length, embedding_dim, n_hidden, n_layers):
+    def stacked_LSTM(self, x, dropout_keep_prob, seq_length, embedding_dim, n_hidden, n_layers):
         x = tf.unstack(tf.transpose(x, perm=[1, 0, 2]))
 
         with tf.name_scope("stacked_lstm"):
             stacked_lstm = []
             for _ in range(n_layers):
                 cell = tf.nn.rnn_cell.BasicLSTMCell(n_hidden, forget_bias=0.1, state_is_tuple=True)
-                lstm_cell = tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=dropout)
+                lstm_cell = tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=dropout_keep_prob)
                 stacked_lstm.append(lstm_cell)
 
         lstm_cell_m = tf.nn.rnn_cell.MultiRNNCell(cells=stacked_lstm, state_is_tuple=True)
@@ -23,9 +23,7 @@ class DeepLSTMClassifier(object):
         self.input_x = tf.placeholder(tf.int32, shape=[None, seq_length], name="input_x")
         self.input_y_tag = tf.placeholder(tf.int32, shape=[None, n_tags], name="input_y")
         self.input_y_sentiment = tf.placeholder(tf.int32, shape=[None, n_sentiments], name="input_y")
-
-        self.dropout_keep_prob = dropout_keep_prob
-        # tf.placeholder(tf.float32, name="dropout_keep_prob")
+        
         l2_loss = tf.constant(0.0)
 
         with tf.name_scope("embeddings"):
@@ -34,7 +32,7 @@ class DeepLSTMClassifier(object):
             self.embedded_words = tf.nn.embedding_lookup(self.W, self.input_x)
 
         with tf.name_scope("stacked_lstm"):
-            self.stacked_lstm_out = self.stacked_LSTM(self.embedded_words, self.dropout_keep_prob, seq_length,
+            self.stacked_lstm_out = self.stacked_LSTM(self.embedded_words, dropout_keep_prob, seq_length,
                                                       embedding_dim,
                                                       n_hidden, n_layers)
 
