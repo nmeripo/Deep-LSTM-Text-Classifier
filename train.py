@@ -20,7 +20,7 @@ y_train_tag, y_train_sentiment = zip(*y_train)
 y_dev_tag, y_dev_sentiment = zip(*y_dev)
 y_test_tag, y_test_sentiment = zip(*y_test)
 
-"model params"
+"""model params"""
 trainable_embeddings = True
 dropout_keep_prob = 0.4
 batch_size = 1024
@@ -142,7 +142,6 @@ with tf.Graph().as_default():
 
 
     # Generate batches
-
     train_batches = data_helper.batch_iter(list(zip(x_train, y_train_tag, y_train_sentiment)), batch_size, num_epochs)
 
     best_accuracy_tag, best_accuracy_sentiment, best_accuracy = 0.0, 0.0, 0
