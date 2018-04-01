@@ -54,7 +54,7 @@ class DeepLSTMClassifier(object):
             self.loss = tf.reduce_mean(
                 tf.nn.softmax_cross_entropy_with_logits_v2(labels=self.input_y_tag, logits=self.y_tag_out)) + \
                         tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=self.input_y_sentiment,
-                                                                               logits=self.y_sentiment_out)) + + l2_reg_lambda * l2_loss
+                                                        logits=self.y_sentiment_out)) + l2_reg_lambda * l2_loss
 
         with tf.name_scope("accuracy"):
             self.correct_prediction_tag = tf.equal(tf.argmax(self.y_tag_out, 1), tf.argmax(self.input_y_tag, 1))
